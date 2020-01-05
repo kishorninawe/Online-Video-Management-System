@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Delete Video{% endblock %}
+
+{% block content %}
+    <div class="page-wrapper">
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+            <!-- HEADER DESKTOP-->
+            <header class="header-desktop">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="header-wrap">
+                            <div class="logo">
+                                <a href="#">
+                                    <img src="{% static 'images/icon/logo.png' %}" alt="Cool Admin"/>
+                                </a>
+                            </div>
+                            <a href="{% url 'home' %}" class="header-desktop-link">Home</a>
+                            <a href="{% url 'my_videos' %}" class="header-desktop-link">My Videos</a>
+                            <form class="form-header" action="" method="POST">
+                                <input class="au-input au-input--xl" type="text" name="search"
+                                       placeholder="Search for videos"/>
+                                <button class="au-btn--submit" type="submit">
+                                    <i class="zmdi zmdi-search"></i>
+                                </button>
+                            </form>
+                            <div class="header-button">
+                                <div class="account-wrap">
+                                    <div class="account-item clearfix js-item-menu">
+                                        <div class="content">
+                                            <a class="js-acc-btn" href="#">{{ user.full_name }}</a>
+                                        </div>
+                                        <div class="account-dropdown js-dropdown">
+                                            <div class="info clearfix">
+                                                <div class="content">
+                                                    <h5 class="name">
+                                                        <a href="{% url 'account' %}">{{ user.full_name }}</a>
+                                                    </h5>
+                                                    <span class="email">{{ user.email }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="account-dropdown__body">
+                                                <div class="account-dropdown__item">
+                                                    <a href="{% url 'account' %}">
+                                                        <i class="zmdi zmdi-account"></i>Account</a>
+                                                </div>
+                                            </div>
+                                            <div class="account-dropdown__footer">
+                                                <a href="{% url 'logout' %}">
+                                                    <i class="zmdi zmdi-power"></i>Logout</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- HEADER DESKTOP-->
+
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="overview-wrap">
+                                    <h2 class="title-1">Delete the video "{{ object }}"?</h2>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row m-t-25">
+                            <div class="col-lg-6">
+                                <form method="post" class="form-horizontal" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <button type="submit" class="au-btn au-btn-icon btn-danger">Yes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END MAIN CONTENT-->
+        </div>
+        <!-- END PAGE CONTAINER-->
+    </div>
+{% endblock %}

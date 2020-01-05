@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}My Videos{% endblock %}
+
+{% block content %}
+    <div class="page-wrapper">
+       <!-- PAGE CONTAINER-->
+        <div class="page-container">
+            <!-- HEADER DESKTOP-->
+            <header class="header-desktop">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="header-wrap">
+                            <div class="logo">
+                                <a href="#">
+                                    <img src="{% static 'images/icon/logo.png' %}" alt="Cool Admin" />
+                                </a>
+                            </div>
+                            <a href="{% url 'home' %}" class="header-desktop-link">Home</a>
+                            <a href="{% url 'my_videos' %}" class="active">My Videos</a>
+                            <form class="form-header">
+                                {{ filter.form.title }}
+                                <button class="au-btn--submit" type="submit">
+                                    <i class="zmdi zmdi-search"></i>
+                                </button>
+                            </form>
+                            <div class="header-button">
+                                <div class="account-wrap">
+                                    <div class="account-item clearfix js-item-menu">
+                                        <div class="content">
+                                            <a class="js-acc-btn" href="#">{{ user_full_name }}</a>
+                                        </div>
+                                        <div class="account-dropdown js-dropdown">
+                                            <div class="info clearfix">
+                                                <div class="content">
+                                                    <h5 class="name">
+                                                        <a href="{% url 'account' %}">{{ user_full_name }}</a>
+                                                    </h5>
+                                                    <span class="email">{{ user_email }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="account-dropdown__body">
+                                                <div class="account-dropdown__item">
+                                                    <a href="{% url 'account' %}">
+                                                        <i class="zmdi zmdi-account"></i>Account
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="account-dropdown__footer">
+                                                <a href="{% url 'logout' %}">
+                                                    <i class="zmdi zmdi-power"></i>Logout
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- HEADER DESKTOP-->
+
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="overview-wrap">
+                                    <h2 class="title-1">Home</h2>
+                                    <a href="{% url 'upload_video' %}">
+                                        <button class="au-btn au-btn-icon au-btn--blue">Upload Video</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% if object_list %}
+                            <div class="row m-t-25">
+                            <div class="col-md-12">
+                                <!-- DATA TABLE -->
+                                <div class="table-data__tool">
+                                    <div class="table-data__tool-left">
+                                        <div class="rs-select2--light rs-select2--md">
+                                            <form>
+                                                {{ filter.form.categories }}
+                                                <div class="dropDownSelect2"></div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive table-responsive-data2">
+                                    <table id="data-table-basic1" class="table table-data2">
+                                        <thead>
+                                            <tr>
+                                                <th>thumbnail</th>
+                                                <th>title</th>
+                                                <th>description</th>
+                                                <th>author name</th>
+                                                <th>publish date</th>
+                                                <th>action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for x in object_list %}
+                                            <tr class="tr-shadow">
+                                                <td><img src="{{ x.thumbnail.url }}" width="50" height="50"></td>
+                                                <td>{{ x.title }}</td>
+                                                <td class="desc">{{ x.description }}</td>
+                                                <td><span class="block-email">{{ x.user_id.full_name }}</span></td>
+                                                <td>{{ x.date_uploaded }}</td>
+                                                <td>
+                                                    <div class="table-data-feature">
+                                                        <button class="item" data-toggle="tooltip" data-placement="top" title="Play">
+                                                            <a href="{{ x.video.url }}">
+                                                                <i class="zmdi zmdi-play-circle-outline"></i>
+                                                            </a>
+                                                        </button>
+                                                        <button class="item" data-toggle="tooltip" data-placement="top" title="Edit">
+                                                            <a href="{% url 'edit_video_details' %}?video_id={{ x.video_id }}">
+                                                                <i class="zmdi zmdi-edit"></i>
+                                                            </a>
+                                                        </button>
+                                                        <button class="item" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                            <a href="{% url 'delete_video' %}?video_id={{ x.video_id }}">
+                                                                <i class="zmdi zmdi-delete"></i>
+                                                            </a>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr class="spacer"></tr>
+                                        {% endfor %}
+                                        </tbody>
+                                        <tfoot><tr></tr></tfoot>
+                                    </table>
+                                </div>
+                                <!-- END DATA TABLE -->
+                            </div>
+                                <div class="col-md-6 offset-md-6 col-sm-6">
+                                    <div class="dataTables_wrapper">
+                                        <div class="dataTables_paginate paging_simple_numbers" id="data-table-basic_paginate">
+                                            {% if page_obj.has_previous %}
+                                                <a href="?page={{ page_obj.previous_page_number }}"
+                                                    class="paginate_button previous disabled">&lt;</a>
+                                            {% endif %}
+                                            <span>
+                                                {% if page_obj.number|add:"-2" >= 1 %}
+                                                    <a href="?page={{ page_obj.number|add:"-2" }}" class="paginate_button">{{ page_obj.number|add:"-2" }}</a>
+                                                {% endif %}
+                                                {% if page_obj.number|add:"-1" >= 1 %}
+                                                    <a href="?page={{ page_obj.number|add:"-1" }}" class="paginate_button">{{ page_obj.number|add:"-1" }}</a>
+                                                {% endif %}
+                                                {% if page_obj.number %}
+                                                    <a href="?page={{ page_obj.number }}" class="paginate_button current">{{ page_obj.number }}</a>
+                                                {% endif %}
+                                                {% if page_obj.number|add:"1" <= paginator.num_pages %}
+                                                    <a href="?page={{ page_obj.number|add:"1" }}" class="paginate_button">{{ page_obj.number|add:"1" }}</a>
+                                                {% endif %}
+                                                {% if page_obj.number|add:"2" <= paginator.num_pages %}
+                                                    <a href="?page={{ page_obj.number|add:"2" }}" class="paginate_button">{{ page_obj.number|add:"2" }}</a>
+                                                {% endif %}
+                                            </span>
+                                            {% if page_obj.has_next %}
+                                                <a href="?page={{ page_obj.next_page_number }}"
+                                                    class="paginate_button next">&gt;</a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <!-- END MAIN CONTENT-->
+        </div>
+        <!-- END PAGE CONTAINER-->
+    </div>
+{% endblock %}
